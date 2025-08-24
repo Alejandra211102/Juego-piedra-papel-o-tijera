@@ -1,90 +1,48 @@
-from flask import Flask, render_template_string, request
+import tkinter as tk
 import random
 
-app = Flask(__name__)
+def jugar(eleccion_jugador):
+    opciones = ['piedra', 'papel', 'tijera']
+    computadora = random.choice(opciones)
 
-# HTML con interfaz (emojis y estilo simple)
-html = """
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Piedra, Papel o Tijera</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background: #f4f6f9;
-        }
-        h1 {
-            color: #333;
-        }
-        .botones button {
-            font-size: 20px;
-            padding: 15px 25px;
-            margin: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            transition: 0.3s;
-        }
-        .botones button:hover {
-            background-color: #45a049;
-        }
-        .resultado {
-            margin-top: 30px;
-            font-size: 18px;
-            color: #222;
-        }
-    </style>
-</head>
-<body>
-    <h1>✊✋✌️ Piedra, Papel o Tijera</h1>
-    <p>Elige tu jugada:</p>
-    <div class="botones">
-        <form method="POST">
-            <button type="submit" name="jugada" value="piedra">🪨 Piedra</button>
-            <button type="submit" name="jugada" value="papel">📄 Papel</button>
-            <button type="submit" name="jugada" value="tijera">✂️ Tijera</button>
-        </form>
-    </div>
+    if eleccion_jugador == computadora:
+        resultado = "¡Empate!"
+    elif (eleccion_jugador == 'piedra' and computadora == 'tijera') or \
+         (eleccion_jugador == 'papel' and computadora == 'piedra') or \
+         (eleccion_jugador == 'tijera' and computadora == 'papel'):
+        resultado = "¡Ganaste!"
+    else:
+        resultado = "¡Perdiste!"
 
-    {% if resultado %}
-    <div class="resultado">
-        <p><b>Tú elegiste:</b> {{ jugador }}</p>
-        <p><b>Computadora eligió:</b> {{ computadora }}</p>
-        <h3>{{ resultado }}</h3>
-    </div>
-    {% endif %}
-</body>
-</html>
-"""
+    etiqueta_resultado.config(
+        text=f"Tú elegiste: {eleccion_jugador}\nComputadora eligió: {computadora}\n{resultado}"
+    )
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    resultado = None
-    jugador = None
-    computadora = None
+# Crear ventana
+ventana = tk.Tk()
+ventana.title("Piedra, Papel o Tijera")
+ventana.geometry("400x300")
 
-    if request.method == "POST":
-        jugador = request.form["jugada"]
-        opciones = ["piedra", "papel", "tijera"]
-        computadora = random.choice(opciones)
+# Etiqueta de instrucciones
+etiqueta = tk.Label(ventana, text="Elige tu jugada:", font=("Arial", 14))
+etiqueta.pack(pady=10)
 
-        if jugador == computadora:
-            resultado = "¡Empate!"
-        elif (jugador == "piedra" and computadora == "tijera") or \
-             (jugador == "papel" and computadora == "piedra") or \
-             (jugador == "tijera" and computadora == "papel"):
-            resultado = "¡Ganaste! 🎉"
-        else:
-            resultado = "¡Perdiste! 😢"
+# Botones de opciones
+frame_botones = tk.Frame(ventana)
+frame_botones.pack()
 
-    return render_template_string(html, resultado=resultado, jugador=jugador, computadora=computadora)
+boton_piedra = tk.Button(frame_botones, text="🪨 Piedra", font=("Arial", 12), command=lambda: jugar("piedra"))
+boton_piedra.grid(row=0, column=0, padx=10)
 
+boton_papel = tk.Button(frame_botones, text="📄 Papel", font=("Arial", 12), command=lambda: jugar("papel"))
+boton_papel.grid(row=0, column=1, padx=10)
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+boton_tijera = tk.Button(frame_botones, text="✂️ Tijera", font=("Arial", 12), command=lambda: jugar("tijera"))
+boton_tijera.grid(row=0, column=2, padx=10)
+
+# Etiqueta del resultado
+etiqueta_resultado = tk.Label(ventana, text="", font=("Arial", 12), fg="blue")
+etiqueta_resultado.pack(pady=20)
+
+# Iniciar loop de la ventana
+ventana.mainloop()
