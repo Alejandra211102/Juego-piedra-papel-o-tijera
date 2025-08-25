@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Piedra Papel Tijera</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>✊ ✋ ✌️ Piedra · Papel · Tijera</h1>
+
+  <section class="scoreboard">
+    <p>Victorias: <span id="victorias">0</span></p>
+    <p>Derrotas: <span id="derrotas">0</span></p>
+    <p>Empates: <span id="empates">0</span></p>
+  </section>
+
+  <section class="arena">
+    <p>Tu elección: <span id="jugador">—</span></p>
+    <p>Computadora eligió: <span id="computadora">—</span></p>
+  </section>
+
+  <section class="controls">
+    <button class="choice" data-choice="piedra">✊ Piedra</button>
+    <button class="choice" data-choice="papel">✋ Papel</button>
+    <button class="choice" data-choice="tijera">✌️ Tijera</button>
+  </section>
+
+  <p id="mensaje">Elige una opción para comenzar…</p>
+    <button id="reiniciar">🔄 Reiniciar juego</button>
+
+  <script src="Juego.js"></script>
+</body>
+</html>
