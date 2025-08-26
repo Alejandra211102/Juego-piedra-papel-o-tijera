@@ -37,7 +37,7 @@ Juego de **Piedra, Papel o Tijera** contra la computadora, con interfaz gráfica
 
 ## 🧭 Paso a paso completo del despliegue
 
-### A) Publicar en GitHub Pages
+### A) Publicar en GitHub
 
 1. Crea el repositorio **público** en GitHub (ej: `Juego-piedra-papel-o-tijera`).
 2. En tu carpeta del proyecto (con `index.html`, `style.css`, `script.js`):
@@ -159,10 +159,10 @@ sudo systemctl restart nginx
 * Unificar estructura simple `index.html`, `style.css`, `script.js` y enlazar script al final del `<body>`.
   
 2. **JS de Node (`readline`)** no funciona en navegador.
-** Soluciòn:**
+ ** Soluciòn:**
    Mi app estaba en python sin con funcionamiento por consola, tuve que hacer la migración de lógica de **Node (readline)** a **DOM Events** en navegador.
 
-3. **Archivos del visual y el repositorio no tenian los mismos archivos
+4. **Archivos del visual y el repositorio no tenian los mismos archivos
 ** Soluciòn:**
 *Abri nuevamente en el visual
 *Se deben ejecutar los siguientes códigos:
