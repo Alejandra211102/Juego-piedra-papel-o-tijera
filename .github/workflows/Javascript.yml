@@ -1,4 +1,4 @@
-name: js_tests
+name: js_test
 
 on:
   push:
@@ -16,16 +16,9 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Cambiar a carpeta correcta
-        run: cd Juego-piedra-papel-o-tijera
-
       - name: Install dependencies
         run: npm install
-        working-directory: Juego-piedra-papel-o-tijera
 
       - name: Run tests
         run: npm test
-        working-directory: Juego-piedra-papel-o-tijera
 
-      - name: Run tests
-        run: npm test
