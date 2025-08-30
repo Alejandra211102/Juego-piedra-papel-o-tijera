@@ -1,0 +1,12 @@
+{
+  "name": "juego-piedra-papel-tijera",
+  "version": "1.0.0",
+  "description": "Juego Piedra Papel Tijera en JavaScript",
+  "main": "Juego.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^8.48.0"
+  }
+}
