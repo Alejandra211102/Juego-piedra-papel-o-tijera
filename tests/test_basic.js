@@ -7,6 +7,6 @@ expect(response.statusCode).toBe(200);
 });
 });
 # .github/workflows/ci.yml
-name: Node.js Tests
+name: js_test
 on:
 push:
