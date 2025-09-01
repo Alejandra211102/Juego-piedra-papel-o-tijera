@@ -26,6 +26,9 @@ Juego de **Piedra, Papel o Tijera** contra la computadora, con interfaz gráfica
 * **Nginx** (para EC2): servidor web estático.
 * **Git & GitHub**: control de versiones y hosting estático.
 * **AWS EC2**: hosting en servidor propio (Ubuntu 22.04 LTS sugerido).
+* Node.js + Express: Para las pruebas automáticas con supertest.
+* Jest: Framework para pruebas unitarias.
+* GitHub Actions: Para la integración continua y validación automática con ESLint.
 
 ---
 
@@ -179,6 +182,9 @@ git pull origin main
 * Unificar estructura simple `index.html`, `style.css`, `script.js` y enlazar script al final del `<body>`.
 * Copiar a `/var/www/html` y **reiniciar Nginx**.
 * Abrir **puerto 80** en Security Group y verificar `systemctl status nginx`.
+
+  **PROBLEMAS ENCONTRADOS EN LA AUTOMATIZACIÒN**
+  
 ---
 
 ## 💡 Consejos y mejores prácticas aprendidas
