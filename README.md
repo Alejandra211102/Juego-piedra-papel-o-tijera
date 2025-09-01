@@ -1,5 +1,5 @@
 # Juego Piedra, Papel o Tijera ✊✋✌️ — README
-![js_tests](https://github.com/Alejandra211102/Juego-piedra-papel-o-tijera/workflows/js_tests/badge.svg)
+[![js_test](https://github.com/Alejandra211102/Juego-piedra-papel-o-tijera/actions/workflows/Javascript.yml/badge.svg)](https://github.com/Alejandra211102/Juego-piedra-papel-o-tijera/actions/workflows/Javascript.yml)
 
 Proyecto web estático (HTML/CSS/JS) con despliegue en GitHub y AWS EC2 (Nginx)
 
