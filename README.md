@@ -143,7 +143,6 @@ sudo systemctl restart nginx
 
 ---
 
-
 ## ✅ Verificación del funcionamiento
 
 * **Local**: abrir `index.html` y probar botones.
@@ -155,6 +154,9 @@ sudo systemctl restart nginx
   * Navegador carga el juego y actualiza puntajes al hacer clic.
 
 ---
+
+## Github Actions
+
 
 ## 🧩 Problemas y soluciones encontrados durante el despliegue
 
@@ -183,9 +185,13 @@ git pull origin main
 * Copiar a `/var/www/html` y **reiniciar Nginx**.
 * Abrir **puerto 80** en Security Group y verificar `systemctl status nginx`.
 
-  **PROBLEMAS ENCONTRADOS EN LA AUTOMATIZACIÒN**
-  
----
+### 1️⃣ Problema: Error en GitHub Actions (Badge "failing")  
+**Descripción:** El badge aparecía en estado `failing` porque no existía un archivo de configuración de ESLint y el linting fallaba.  
+ 
+**Solución:**  
+Se generó el archivo `.eslintrc.json` con:  
+```bash
+npx eslint --init
 
 ## 💡 Consejos y mejores prácticas aprendidas
 
