@@ -1,4 +1,4 @@
-name: piedra.js
+name: js_test
 
 on:
   push:
