@@ -154,10 +154,6 @@ sudo systemctl restart nginx
   * Navegador carga el juego y actualiza puntajes al hacer clic.
 
 ---
-
-## Github Actions
-
-
 ## 🧩 Problemas y soluciones encontrados durante el despliegue
 
 1. **Página en blanco** al abrir `index.html`.
@@ -185,13 +181,111 @@ git pull origin main
 * Copiar a `/var/www/html` y **reiniciar Nginx**.
 * Abrir **puerto 80** en Security Group y verificar `systemctl status nginx`.
 
+## Github Actions
+## Proceso para configurar GitHub Actions
+
+1. Configurar workflow en GitHub Actions
+
+En tu repositorio de GitHub, creaste un workflow para ejecutar ESLint en cada push o pull request.
+
+Para eso, agregaste un archivo YAML en .github/workflows/js_test.yml (o similar).
+
+Por ejemplo, un workflow básico para ESLint:
+
+`name: ESLint Check`
+`on: [push, pull_request]`
+`jobs:`
+`lint:`
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint`
+
+Esto configura que GitHub Actions ejecute ESLint en cada cambio.
+
+2. Comandos usados en local
+
+Para inicializar ESLint y crear configuración:
+
+`npx eslint --init`
+Modificar el package.json para que el script test use ESLint:
+
+`"scripts": {
+  "lint": "eslint .",
+  "test": "npm run lint"
+}`
+
+## 🧩 Problemas y soluciones encontrados durante el despliegue
+
 ### 1️⃣ Problema: Error en GitHub Actions (Badge "failing")  
 **Descripción:** El badge aparecía en estado `failing` porque no existía un archivo de configuración de ESLint y el linting fallaba.  
- 
+
 **Solución:**  
+
 Se generó el archivo `.eslintrc.json` con:  
-```bash
-npx eslint --init
+
+bash
+
+`npx eslint --init`
+
+2️⃣ Problema: Error al ejecutar npm test sin tests definidos
+
+Descripción:
+Al ejecutar npm test, aparecía el siguiente error:
+
+Error: no test specified
+
+El error sucedía en el script test ya que en package.json no estaba configurado correctamente.
+✔️ Solución:
+Se modificó el script para ejecutar ESLint como prueba:
+
+`"scripts": {
+  "lint": "eslint .",
+  "test": "npm run lint"`
+}
+
+3️⃣ Problema: Badge mostraba "failing" después de corregir errores
+
+Descripción:
+Aunque los errores ya se habían corregido, el badge seguía mostrando el estado como "failing".
+
+✔️ Solución:
+Se esperó la actualización automática de GitHub Actions. En caso de persistir, se puede reiniciar manualmente desde:
+
+`GitHub → Actions → Re-run jobs`
+
+✅ Estado actual:
+El badge ahora refleja correctamente el estado actualizado del workflow.
+
+4️⃣ Problema: Badge mostraba "failing" aunque los tests pasaban
+
+Descripción:
+El badge indicaba un estado incorrecto, a pesar de que los logs no contenían errores.
+
+Causa:
+La URL del badge en el README.md estaba mal configurada (por ejemplo, apuntaba a otro archivo de workflow o a una rama incorrecta).
+
+✔️ Solución:
+Se generó el badge correcto desde:
+
+`GitHub → Actions → Create status badge`
+
+Y se reemplazó la URL del badge en el README.md.
+
+✅ Estado actual:
+El badge refleja correctamente el estado real del workflow.
 
 ## 💡 Consejos y mejores prácticas aprendidas
 
