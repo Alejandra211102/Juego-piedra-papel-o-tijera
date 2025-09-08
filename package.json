@@ -2,9 +2,9 @@
   "name": "juego-piedra-papel-tijera",
   "version": "1.0.0",
   "description": "Juego Piedra Papel Tijera en JavaScript",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node app.js",
     "lint": "eslint ."
   },
   "dependencies": {
