@@ -13,9 +13,8 @@ RUN npm install
 # Copiar todo el resto de los archivos del proyecto
 COPY . .
 
-# Exponer el puerto (el que use tu servidor, supongamos 8080)
+# Exponer el puerto (el que usa tu servidor: 8080)
 EXPOSE 8080
 
 # Comando para arrancar la app
-CMD ["node", "app.js"]
-
+CMD ["npm", "start"]
