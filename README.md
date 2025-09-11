@@ -3,7 +3,8 @@
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)
 
 
-Proyecto web estático (HTML/CSS/JS) con despliegue en GitHub y AWS EC2 (Nginx)
+Proyecto web estático (HTML/CSS/JS) con despliegue en GitHub y AWS EC2 (Nginx).  
+Ahora también se encuentra **dockerizado**, lo que permite ejecutarlo en cualquier entorno con Docker instalado. 🚀  
 
 ---
 
@@ -17,6 +18,7 @@ Juego de **Piedra, Papel o Tijera** contra la computadora, con interfaz gráfica
 * Lógica en JavaScript puro.
 * Despliegue: GitHub Pages
 * Servidor: EC2 con Nginx.
+* Contenedor: Docker + Node.js + Express.
 
 ---
 
@@ -28,9 +30,10 @@ Juego de **Piedra, Papel o Tijera** contra la computadora, con interfaz gráfica
 * **Nginx** (para EC2): servidor web estático.
 * **Git & GitHub**: control de versiones y hosting estático.
 * **AWS EC2**: hosting en servidor propio (Ubuntu 22.04 LTS sugerido).
-* Node.js + Express: Para las pruebas automáticas con supertest.
-* Jest: Framework para pruebas unitarias.
-* GitHub Actions: Para la integración continua y validación automática con ESLint.
+* **Node.js + Express**: servidor para servir los archivos en Docker.
+* **Docker**: ejecución portable y replicable del proyecto.
+* **Jest**: framework para pruebas unitarias.
+* **GitHub Actions**: integración continua y validación automática con ESLint.
 
 ---
 
@@ -38,7 +41,7 @@ Juego de **Piedra, Papel o Tijera** contra la computadora, con interfaz gráfica
 
 * **GitHub Pages**: `https://github.com/Alejandra211102/Juego-piedra-papel-o-tijera.git`
 * **EC2 (HTTP)**: `http://3.82.27.207/`
-  
+* **Docker**: `http://localhost:8080/`
 ---
 
 ## 🧭 Paso a paso completo del despliegue
@@ -171,10 +174,10 @@ sudo systemctl restart nginx
 *Abri nuevamente en el visual
 *Se deben ejecutar los siguientes códigos:
 
-git init
+`git init
 git remote add origin https://github.com/usuario/repositorio.git
 git branch -M main
-git pull origin main
+git pull origin main`
 
 
 5. **Nginx muestra default**: archivos no copiados a `/var/www/html`.
@@ -188,9 +191,9 @@ git pull origin main
 
 1. Configurar workflow en GitHub Actions
 
-En tu repositorio de GitHub, creaste un workflow para ejecutar ESLint en cada push o pull request.
+En el repositorio de GitHub, se creo un workflow para ejecutar ESLint en cada push o pull request.
 
-Para eso, agregaste un archivo YAML en .github/workflows/js_test.yml (o similar).
+Para eso, se debe agregar un archivo YAML en .github/workflows/js_test.yml (o similar).
 
 Por ejemplo, un workflow básico para ESLint:
 
@@ -289,12 +292,86 @@ Y se reemplazó la URL del badge en el README.md.
 ✅ Estado actual:
 El badge refleja correctamente el estado real del workflow.
 
+## 🐳 Ejecución con Docker
+
+### 1) Construir la imagen
+
+`Imagen base oficial de Node
+FROM node:18
+Crear directorio de trabajo dentro del contenedor
+WORKDIR /app
+Copiar package.json y package-lock.json primero (mejor cacheo de dependencias)
+COPY package*.json ./
+Instalar dependencias en modo producción
+RUN npm install --production
+Copiar el resto del código (incluye /public)
+COPY . .
+(opcional) Ignorar archivos grandes o innecesarios con .dockerignore
+Exponer el puerto (documentativo)
+EXPOSE 8080
+Comando para iniciar la aplicación
+CMD ["npm", "start"]`
+
+** Se crear la carpeta .dockerignore **
+Esta carpeta se crear para excluir archivos y carpetas innecesarios del conexto de contrrucciòn del Docker
+
+node_modules
+npm-debug.log
+.DS_Store
+.git
+.gitignore
+.vscode
+
+** En la carpeta del Package.json**
+Se debe actualizar el código para que la aplicación pudiera: 
+
+1. **Definir el punto de entrada de la app**  
+   Se estableció `app.js` como archivo principal para que Node sepa qué correr al iniciar la aplicación.
+
+2. **Agregar un script de inicio**  
+   En el `package.json` se incluyó:  
+   ```json
+   "scripts": {
+     "start": "node app.js"
+   }
+Con esto se puede ejecutar la aplicación con nmp start
+
+2. **Incluir solo las dependencias necesarias**  
+Se instaló únicamente Express como dependencia real de la aplicación:
+# Exponer el puerto (documentativo)
+EXPOSE 8080
+# Comando para iniciar la app
+CMD ["npm", "start"]`
+
+🧩 Problemas y soluciones encontrados durante el despliegue con Docker
+
+1. El servidor no mostraba mensaje de inicio
+Causa: el console.log estaba mal configurado en app.js.
+Solución: corregir la configuración del puerto y añadir `app.listen(PORT, ...).`
+
+2. Archivos estáticos (HTML/CSS/JS) no se cargaban
+Causa: Express no estaba sirviendo la carpeta public.
+Solución: usar `app.use(express.static(path.join(__dirname, 'public')));`
+
+3. Error EADDRINUSE: address already in use :::8080
+Causa: existían múltiples contenedores en ejecución con el mismo puerto.
+Solución: detener el contenedor previo `(docker ps + docker stop <id>)` o usar otro puerto.
+
+4.Docker Desktop no arrancaba ya que el pc no tenia la Virtualization activa
+Causa: virtualización deshabilitada en la BIOS.
+Solución: habilitar Intel VT-x/AMD-V en la BIOS y actualizar WSL con `wsl --update`
+
 ## 💡 Consejos y mejores prácticas aprendidas
 
 * Mantener proyectos estáticos **sin dependencias** para despliegue rápido.
 * Enlazar JS **al final del `body`** para asegurar que el DOM esté listo.
 * Proteger SSH (22/TCP) a tu IP; cerrar cuando no se use.
 * Nombrar carpetas/repos **sin espacios** y en minúsculas.
+* Usar package*.json al copiar dependencias: Esto permite aprovechar la caché de Docker. Si tu código cambia pero no tus dependencias, no se reinstalarán, lo que acelera la compilación del contenedor.
+* Instalar dependencias en modo producción: Con npm install --production evitamos instalar dependencias innecesarias (ej. devDependencies), reduciendo el tamaño final de la imagen y optimizando el rendimiento.
+* Ignorar archivos innecesarios con .dockerignore: Incluir archivos como node_modules, logs o .git dentro de la imagen puede hacerla muy pesada. Definir un .dockerignore es clave para mantenerla liviana.
+* Exponer puertos solo de forma documentativa: El comando EXPOSE 8080 no abre el puerto por sí mismo, solo documenta la intención. El verdadero mapeo se hace al correr el contenedor: `docker run -p 8080:8080 nombre-imagen`
+  
+docker run -p 8080:8080 nombre-imagen
 * Usar `curl -I` y `systemctl status` para diagnosticar rápido.
-
 ---
